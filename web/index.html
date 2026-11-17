@@ -2037,10 +2037,12 @@ function renderModelList(filter = "") {
     </button>`;
   }).join("");
 }
-function openModelDrop() {
+function openModelDrop(filter) {
   const drop = $("#model_drop");
   if (!drop || !currentModels.length) return;
-  renderModelList();
+  if (!drop.classList.contains("open")) {
+    renderModelList(filter);
+  }
   drop.classList.add("open");
 }
 function closeModelDrop() {
@@ -2312,13 +2314,12 @@ document.addEventListener("change", async e => {
 
 document.addEventListener("input", e => {
   if (e.target.id === "ai_model" && currentModels.length) {
-    renderModelList(e.target.value);
-    openModelDrop();
+    openModelDrop(e.target.value);
   }
 });
 document.addEventListener("focusin", e => {
   if (e.target.id === "ai_model" && currentModels.length) {
-    openModelDrop();
+    openModelDrop(e.target.value);
   }
 });
 
@@ -2347,7 +2348,6 @@ document.addEventListener("click", async e => {
         const r = await send("/api/ai/models", {provider: $("#ai_provider").value, base_url: $("#ai_base").value, key: $("#ai_key").value});
         currentModels = r.models || [];
         if (currentModels.length) {
-          renderModelList();
           openModelDrop();
           toast(`${currentModels.length} models found. Choose one below.`, "ok");
         } else {
