@@ -2089,8 +2089,10 @@ function renderModelList(filter = "") {
 function openModelDrop(filter) {
   const drop = $("#model_drop");
   if (!drop || !currentModels.length) return;
-  if (!drop.classList.contains("open")) {
+  if (filter !== undefined && filter !== null) {
     renderModelList(filter);
+  } else if (!drop.classList.contains("open")) {
+    renderModelList();
   }
   drop.classList.add("open");
 }
